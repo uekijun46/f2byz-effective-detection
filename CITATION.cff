@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this code or these data, please cite the paper."
+title: "Effective detection of F_2-by-Z groups by their finite quotients: code and data"
+authors:
+  - family-names: Ueki
+    given-names: Jun
+    affiliation: Ochanomizu University
+license: MIT
+repository-code: "https://github.com/uekijun46/f2byz-effective-detection"
+version: "1.0"
+date-released: 2026-08-27
