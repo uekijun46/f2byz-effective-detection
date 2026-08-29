@@ -9,8 +9,14 @@ from collections import Counter
 from fractions import Fraction
 
 def read(path):
+    """Read a GAP output file, plain or gzipped."""
+    if path.endswith('.gz'):
+        import gzip
+        fh = gzip.open(path, 'rt')
+    else:
+        fh = open(path)
     meta={}; types=[]
-    for line in open(path):
+    for line in fh:
         line=line.strip()
         if not line: continue
         if line.startswith('#'):
@@ -55,12 +61,24 @@ def exhaust_G3():
     return NG, cnt, P3
 
 if __name__=="__main__":
+    args=[a for a in sys.argv[1:] if a!="--json"]
+    jsonpath=None
+    if "--json" in sys.argv:
+        i=sys.argv.index("--json"); jsonpath=sys.argv[i+1]; args=[a for a in args if a!=jsonpath]
+    summary={}
     NG,exact,P3=exhaust_G3()
     print("q=3, exhaustive:  |G_3| = %d,  N(3) = %d,  P_3 = %s = %.7f"
           %(NG,len(exact),P3,float(P3)))
-    for path in sys.argv[1:]:
+    summary["P3_exact"]=str(P3)
+    summary["P3_exact_float"]=float(P3)
+    summary["N3_exact"]=len(exact)
+    summary["order_G3"]=NG
+    for path in args:
         meta,types=read(path)
         s=stats(types)
+        summary["q%s"%meta['q']]={"n":s['n'],"distinct":s['distinct'],
+                                  "f1":s['f1'],"missing_mass":s['missing_mass'],
+                                  "P":s['P'],"invP":s['invP'],"seed":meta.get('seed')}
         print("q=%s  n=%d  distinct=%d  f1=%d  missing mass=%.3f  Phat=%.3g  1/Phat=%.3g"
               %(meta['q'],s['n'],s['distinct'],s['f1'],s['missing_mass'],s['P'],s['invP']))
         if meta['q']=='3':
@@ -70,3 +88,8 @@ if __name__=="__main__":
             print("      uniformity self-test against the exhaustive distribution:"
                   " chi2 = %.1f on %d degrees of freedom"%(chi,df))
             print("      P_3 exact = %.7f, sampled = %.7f"%(float(P3),s['P']))
+            summary["q3_chi2"]=round(chi,1); summary["q3_df"]=df
+    if jsonpath:
+        import json
+        json.dump(summary,open(jsonpath,"w"),indent=2)
+        print("written:",jsonpath)

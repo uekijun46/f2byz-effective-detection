@@ -61,7 +61,7 @@ two implementations are checked against each other.
 | `thm:familyE` [6.17], sign-twisted blindness | `04_twoblock/verify_psl_theorem.py` | — |
 | Section 6.4, sharpness of $E(q) \mid M$ | `04_twoblock/psl_threshold_scan.py` | — |
 | `prop:twist` [6.16], twisted coprime powers | `04_twoblock/cohom_proof.py` | — |
-| `rem:vocabsize` [7.1], the vocabulary $N(q)$ and the missing mass | `05_capacity/vocab.g`, `05_capacity/analyse.py`, see `05_capacity/README.md` | `data/summary.json` |
+| `rem:vocabsize` [7.1], the vocabulary $N(q)$ and the missing mass | `05_capacity/vocab.g`, `05_capacity/analyse.py`, see `05_capacity/README.md` | `data/summary.json`, `data/out_q*.txt.gz` |
 | Section 7.3, fixed loci for $D = 40$ and $D = 60$ | `06_fixed_locus/fixloc.py` | — |
 | Section 7.3, counting formulas and the curve $E$ | `06_fixed_locus/gl2.py` | — |
 
@@ -85,8 +85,7 @@ python3 src/classes.py 1400                  # independent class enumeration
 python3 04_twoblock/tp_table.py              # the table of T_p
 python3 04_twoblock/verify_blindness_law.py  # the blindness law
 python3 06_fixed_locus/fixloc.py             # the fixed loci, through Singular
-gap -q -b -c 'q:=3;; nsamples:=100000;; seed:=1;;' < 05_capacity/vocab.g > out_q3.txt
-python3 05_capacity/analyse.py out_q3.txt
+python3 05_capacity/analyse.py data/out_q3.txt.gz data/out_q5.txt.gz data/out_q7.txt.gz
 python3 03_congruence/below24_crosscheck.py   # prop:below24, both implementations
 ```
 
@@ -107,12 +106,6 @@ then decide congruence, by two different criteria, and
 Both runs add $S_4$ and $\mathrm{SL}_2(\mathbb{F}_3)$ as controls. The
 proposition says that these two are not congruence, so a check that reported
 them as congruence would be worthless, whatever it said about the other 25.
-
-## Still to be done
-
-`data/summary.json` records an early pair of sampling runs. The figures quoted
-in `rem:vocabsize` [7.1] come from larger runs, which have to be repeated on a
-machine with GAP before release. See `05_capacity/README.md`.
 
 ## License
 
